@@ -11,6 +11,11 @@ $distroName = "Mint"
 $mPointName = "projects"
 $fsType	 = "ext4"
 
+function Test-Admin {
+	$currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
+ 	$currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
 function Umount-All {
 	param (
 		[string]$VhdPath
@@ -55,6 +60,11 @@ function Main {
 	param (
 		[string]$VhdPath
 	)
+
+	if (-not (Test-Admin)) {
+		Write-Error "This script requires administrative privileges!"
+		exit 1
+	}
 
 	try {
 		Umount-All -VhdPath $VhdPath
