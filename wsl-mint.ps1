@@ -12,8 +12,8 @@ $mPointName = "projects"
 $fsType	 = "ext4"
 
 function Test-Admin {
-	$currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
- 	$currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    $currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
+    $currentUser.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 function Umount-All {
@@ -63,6 +63,11 @@ function Main {
 
 	if (-not (Test-Admin)) {
 		Write-Error "This script requires administrative privileges!"
+		exit 1
+	}
+
+	if (-not (Test-Path -Path $defaultVhdPath)) {
+		Write-Error "Default VHD file at path '$defaultVhdPath' does not exist. Please specify a valid VHD path."
 		exit 1
 	}
 
